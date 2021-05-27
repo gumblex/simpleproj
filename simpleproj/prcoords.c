@@ -19,14 +19,14 @@
 #define EARTH_R 6371000
 
 
-static inline int sanity_in_china_p(PJ_LONLAT coords) {
-    return ((0.8293 <= coords.lat) && (coords.lat <= 55.8271) &&
-            (72.004 <= coords.lon) && (coords.lon <= 137.8347));
+static inline int sanity_in_china_p(PJ_LONLAT *coords) {
+    return ((0.8293 <= coords->lat) && (coords->lat <= 55.8271) &&
+            (72.004 <= coords->lon) && (coords->lon <= 137.8347));
 }
 
 
 PJ_LONLAT prcoords_wgs_gcj(PJ_LONLAT wgs, int check_china) {
-    if (check_china && !sanity_in_china_p(wgs)) {
+    if (check_china && !sanity_in_china_p(&wgs)) {
         return wgs;
     }
 
@@ -134,8 +134,8 @@ PJ_LONLAT prcoords_wgs_bd(PJ_LONLAT bd, int check_china) {
 
 /* generic "bored function" factory, Caijun 2014
  * gcj: 4 calls to prcoords_wgs_gcj; ~0.1mm acc */
-#define __precise_conv(bad, wgs, check_china, fwd, rev) do {  \
-    wgs = rev(bad, check_china);  \
+#define __precise_conv(bad, wgs, fwd, rev) do {  \
+    wgs = rev(bad, 0);  \
     PJ_LONLAT diff = {99, 99};  \
     /* Wait till we hit fixed point or get bored */  \
     unsigned i = 0;  \
@@ -157,19 +157,22 @@ and Baidu seems to do similar things with their API too.
 */
 
 PJ_LONLAT prcoords_gcj_wgs_bored(PJ_LONLAT gcj, int check_china) {
+    if (check_china && !sanity_in_china_p(&gcj)) return gcj;
     PJ_LONLAT result;
-    __precise_conv(gcj, result, check_china, prcoords_wgs_gcj, prcoords_gcj_wgs);
+    __precise_conv(gcj, result, prcoords_wgs_gcj, prcoords_gcj_wgs);
     return result;
 }
 
 PJ_LONLAT prcoords_bd_gcj_bored(PJ_LONLAT bd, int check_china) {
+    if (check_china && !sanity_in_china_p(&bd)) return bd;
     PJ_LONLAT result;
-    __precise_conv(bd, result, check_china, prcoords_gcj_bd, prcoords_bd_gcj);
+    __precise_conv(bd, result, prcoords_gcj_bd, prcoords_bd_gcj);
     return result;
 }
 
 PJ_LONLAT prcoords_bd_wgs_bored(PJ_LONLAT bd, int check_china) {
+    if (check_china && !sanity_in_china_p(&bd)) return bd;
     PJ_LONLAT result;
-    __precise_conv(bd, result, check_china, prcoords_wgs_bd, prcoords_bd_wgs);
+    __precise_conv(bd, result, prcoords_wgs_bd, prcoords_bd_wgs);
     return result;
 }
