@@ -59,19 +59,24 @@ def wgs_bd(lon, lat, check_china=True):
     return (result.lon, result.lat)
 
 
-def gcj_wgs_bored(lon, lat, check_china=True):
-    result = lib.prcoords_gcj_wgs_bored({'lon': lon, 'lat': lat}, check_china)
+def gcj_wgs_exact(lon, lat, check_china=True):
+    result = lib.prcoords_gcj_wgs_exact({'lon': lon, 'lat': lat}, check_china)
     return (result.lon, result.lat)
 
 
-def bd_gcj_bored(lon, lat, check_china=True):
-    result = lib.prcoords_bd_gcj_bored({'lon': lon, 'lat': lat}, check_china)
+def bd_gcj_exact(lon, lat, check_china=True):
+    result = lib.prcoords_bd_gcj_exact({'lon': lon, 'lat': lat}, check_china)
     return (result.lon, result.lat)
 
 
-def bd_wgs_bored(lon, lat, check_china=True):
-    result = lib.prcoords_bd_wgs_bored({'lon': lon, 'lat': lat}, check_china)
+def bd_wgs_exact(lon, lat, check_china=True):
+    result = lib.prcoords_bd_wgs_exact({'lon': lon, 'lat': lat}, check_china)
     return (result.lon, result.lat)
+
+
+gcj_wgs_bored = gcj_wgs_exact
+bd_gcj_bored = bd_gcj_exact
+bd_wgs_bored = bd_wgs_exact
 
 
 def earth_distance(lon1, lat1, lon2, lat2):
@@ -80,12 +85,12 @@ def earth_distance(lon1, lat1, lon2, lat2):
 
 def from3857_to4326(x, y):
     lon = math.degrees(x / EARTH_EQUATORIAL_RADIUS)
-    lat = math.degrees(2 * math.atan(math.exp(y/EARTH_EQUATORIAL_RADIUS)) - math.pi/2)
+    lat = math.degrees(math.atan(math.sinh(y/EARTH_EQUATORIAL_RADIUS)))
     return (lon, lat)
 
 
 def from4326_to3857(lon, lat):
     x = math.radians(lon) * EARTH_EQUATORIAL_RADIUS
-    y = math.log(math.tan(math.radians(45 + lat / 2.0))) * EARTH_EQUATORIAL_RADIUS
+    y = math.asinh(math.tan(math.radians(lat))) * EARTH_EQUATORIAL_RADIUS
     return (x, y)
 

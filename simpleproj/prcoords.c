@@ -132,7 +132,7 @@ PJ_LONLAT prcoords_wgs_bd(PJ_LONLAT bd, int check_china) {
 }
 
 
-/* generic "bored function" factory, Caijun 2014
+/* generic "exact function" factory, Caijun 2014
  * gcj: 4 calls to prcoords_wgs_gcj; ~0.1mm acc */
 #define __precise_conv(bad, wgs, fwd, rev) do {  \
     wgs = rev(bad, 0);  \
@@ -156,21 +156,21 @@ original GCJ implementation contains noise from a linear-modulo PRNG,
 and Baidu seems to do similar things with their API too.
 */
 
-PJ_LONLAT prcoords_gcj_wgs_bored(PJ_LONLAT gcj, int check_china) {
+PJ_LONLAT prcoords_gcj_wgs_exact(PJ_LONLAT gcj, int check_china) {
     if (check_china && !sanity_in_china_p(&gcj)) return gcj;
     PJ_LONLAT result;
     __precise_conv(gcj, result, prcoords_wgs_gcj, prcoords_gcj_wgs);
     return result;
 }
 
-PJ_LONLAT prcoords_bd_gcj_bored(PJ_LONLAT bd, int check_china) {
+PJ_LONLAT prcoords_bd_gcj_exact(PJ_LONLAT bd, int check_china) {
     if (check_china && !sanity_in_china_p(&bd)) return bd;
     PJ_LONLAT result;
     __precise_conv(bd, result, prcoords_gcj_bd, prcoords_bd_gcj);
     return result;
 }
 
-PJ_LONLAT prcoords_bd_wgs_bored(PJ_LONLAT bd, int check_china) {
+PJ_LONLAT prcoords_bd_wgs_exact(PJ_LONLAT bd, int check_china) {
     if (check_china && !sanity_in_china_p(&bd)) return bd;
     PJ_LONLAT result;
     __precise_conv(bd, result, prcoords_wgs_bd, prcoords_bd_wgs);

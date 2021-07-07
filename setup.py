@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='simpleproj',
-    version='0.2',
+    version='0.3',
     description='Simple geodetic coordinate transformations',
     author='gumblex',
     license='MIT',
