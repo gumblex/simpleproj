@@ -10,5 +10,7 @@ PJ_LONLAT prcoords_wgs_bd(PJ_LONLAT bd, int check_china);
 PJ_LONLAT prcoords_gcj_wgs_exact(PJ_LONLAT gcj, int check_china);
 PJ_LONLAT prcoords_bd_gcj_exact(PJ_LONLAT bd, int check_china);
 PJ_LONLAT prcoords_bd_wgs_exact(PJ_LONLAT bd, int check_china);
+PJ_XY prcoords_bd_merc_fwd(PJ_LONLAT bd);
+PJ_LONLAT prcoords_bd_merc_inv(PJ_XY point);
 
 #endif // header
