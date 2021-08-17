@@ -58,17 +58,19 @@ PJ_LONLAT prcoords_wgs_gcj(PJ_LONLAT wgs, int check_china) {
     default deviation of <300, -100> meters.
     */
 
+    double x_pi = x * M_PI, y_pi = y * M_PI, sq_x = sqrt(fabs(x));
+
     double dLat_m = (-100 + 2 * x + 3 * y + 0.2 * y * y + 0.1 * x * y +
-        0.2 * sqrt(fabs(x)) + (
-            2 * sin(x * 6 * M_PI) + 2 * sin(x * 2 * M_PI) +
-            2 * sin(y * M_PI) + 4 * sin(y / 3 * M_PI) +
-            16 * sin(y / 12 * M_PI) + 32 * sin(y / 30 * M_PI)
+        0.2 * sq_x + (
+            2 * sin(x_pi * 6) + 2 * sin(x_pi * 2) +
+            2 * sin(y_pi) + 4 * sin(y_pi / 3) +
+            16 * sin(y_pi / 12) + 32 * sin(y_pi / 30)
         ) * 20 / 3);
     double dLon_m = (300 + x + 2 * y + 0.1 * x * x + 0.1 * x * y +
-        0.1 * sqrt(fabs(x)) + (
-            2 * sin(x * 6 * M_PI) + 2 * sin(x * 2 * M_PI) +
-            2 * sin(x * M_PI) + 4 * sin(x / 3 * M_PI) +
-            15 * sin(x / 12 * M_PI) + 30 * sin(x / 30 * M_PI)
+        0.1 * sq_x + (
+            2 * sin(x_pi * 6) + 2 * sin(x_pi * 2) +
+            2 * sin(x_pi) + 4 * sin(x_pi / 3) +
+            15 * sin(x_pi / 12) + 30 * sin(x_pi / 30)
         ) * 20 / 3);
 
     double radLat = wgs.lat * DEG_TO_RAD;
